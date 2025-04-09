@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+  ros2_main:
+    build:
+      context: ./ros2_main
+    container_name: ros2_main
+    network_mode: host
+    environment:
+      - ROS_DOMAIN_ID=0
+    volumes:
+      - ./ros2_main/your_main_packages:/root/ros2_ws/src/your_main_packages:rw
+    depends_on:
+      - redis
+      - kuka
+      - scanner
+    stdin_open: true
+    tty: true
+  gui:
+    build:
+      context: ./gui
+    container_name: gui
+    ports:
+      - "3000:3000"  # frontend port exposed to your host
+    depends_on:
+      - ros2_main
+    stdin_open: true
+    tty: true
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+  data_analysis:
+    image: python
+  kuka:
+    build:
+      context: kuka_arm
+      dockerfile: Dockerfile
+    container_name: kuka_ros2_container
+    network_mode: host
+  camera:
+    
+  scanner:
+    build: ./scanner
+  
+
+networks:
+  
+  
+  

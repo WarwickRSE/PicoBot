@@ -1,0 +1,19 @@
+some JS for interacting with ROS (ChatGPT)
+
+import ROSLIB from 'roslib';
+
+const ros = new ROSLIB.Ros({
+  url: 'ws://ros2_main:9090'  // docker-compose service name!
+});
+
+ros.on('connection', () => {
+  console.log('Connected to ROS bridge');
+});
+
+ros.on('error', (error) => {
+  console.error('Connection error: ', error);
+});
+
+ros.on('close', () => {
+  console.log('Connection closed');
+});
