@@ -1,6 +1,7 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
+#TODO: Check on the filters_on_camera_params.yaml filepath resolution at launch
 
 def generate_launch_description():
     return LaunchDescription([
