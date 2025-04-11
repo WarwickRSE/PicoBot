@@ -7,10 +7,6 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV ROS_DISTRO=humble
 
-
-
-
-
 # Update system and install development tools
 RUN apt-get update && apt-get install -y \
     git \
@@ -36,29 +32,33 @@ RUN apt-get update
 RUN rosdep init || true
 RUN rosdep update
 
-# Create workspace
-WORKDIR /root/ros2_ws
+# From here we follow https://github.com/Woolfrey/control_kuka_velocity
+
+# We wont use mujoco here as we are not using the mujoco simulator, we can put that in an additional dockerfile
+
+# Create workspace as per the original repo
+WORKDIR /root/workspace
+RUN git clone https://github.com/Woolfrey/software_robot_library.git
+RUN mkdir -p /root/workspace/software_robot_library/build
+WORKDIR /root/workspace/software_robot_library/build
+RUN cmake .. && make && make install
+
+
+WORKDIR /root/workspace/ros2_ws
 RUN mkdir -p src
+RUN mkdir -p build
+RUN mkdir -p install
+RUN mkdir -p log
 
-# Clone the KUKA ROS 2 drivers, using a fork which has the cartesian and impedance control in it keep an eye on state of https://github.com/kroshu/kuka_drivers/pull/192
-RUN git clone https://github.com/kroshu/kuka_drivers.git src/kuka_drivers
-WORKDIR src/kuka_drivers 
-RUN git fetch origin feature/fri_cart_imp_control
-RUN git checkout feature/fri_cart_imp_control
-WORKDIR /root/ros2_ws/src
-RUN vcs import < kuka_drivers/upstream.repos
-
-WORKDIR /root/ros2_ws
-RUN rosdep install --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y
-
-
-# Build and source the workspace
-RUN /bin/bash -c "source /opt/ros/$ROS_DISTRO/setup.bash && colcon build"
+WORKDIR /root/workspace/ros2_ws/src
+# Clone the required packages
+RUN git clone https://github.com/Woolfrey/control_kuka_velocity.git
+RUN git clone https://github.com/Woolfrey/client_serial_link.git
+RUN git clone https://github.com/Woolfrey/server_serial_link.git
+RUN git clone https://github.com/Woolfrey/interface_serial_link.git
 
 
-
-# Source the workspace on container start
-RUN echo "source /root/ros2_ws/install/setup.bash" >> /root/.bashrc
-
-# Default command
-CMD ["bash"]
+# Build the workspace
+WORKDIR /root/workspace/ros2_ws
+RUN rosdep install -y --from-paths src --ignore-src -r -y
+RUN . /opt/ros/$ROS_DISTRO/setup.sh && colcon build
