@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <actor name="actor1">
+    	<static>true</static>
+    	<origin pose="0.375 0.33 0 0 -1.57 0" />
+	      <skin>
+		<filename>stand.dae</filename>
+	      </skin>
+	      <script loop="false" delay_start="0.0" auto_start="false">
+	      </script>
+        <plugin name="actor1_plugin" filename="libActorPlugin.so">
+	    <obstacle_weight>1.8</obstacle_weight>
+	    <animation_factor>0.01</animation_factor>
+  	</plugin>
+    </actor>
+  </world>
+</sdf>
