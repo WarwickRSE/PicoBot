@@ -8,6 +8,8 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV ROS_DISTRO=humble
 
+SHELL ["/bin/bash", "-c"]
+
 # Update system and install development tools
 RUN apt-get update && apt-get install -y \
     git \
@@ -39,17 +41,16 @@ WORKDIR /root/workspace
 
 # This package
 WORKDIR /root/workspace/ros2_ws
-RUN mkdir -p src
-RUN mkdir -p build
-RUN mkdir -p install
-RUN mkdir -p log
+RUN mkdir -p src build install log
+
 
 # Copy our ROS2 code over
 COPY ./src ./src
 
 # Build the workspace
 WORKDIR /root/workspace/ros2_ws
-RUN rosdep install -y --from-paths src --ignore-src -r -y
-RUN . /opt/ros/$ROS_DISTRO/setup.sh && colcon build
+# RUN rosdep install -y --from-paths src --ignore-src -r -y
+
+# RUN . /opt/ros/$ROS_DISTRO/setup.bash && colcon build
 
 
