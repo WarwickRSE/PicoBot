@@ -49,7 +49,7 @@ COPY ./src ./src
 
 # Build the workspace
 WORKDIR /root/workspace/ros2_ws
-# RUN rosdep install -y --from-paths src --ignore-src -r -y
+RUN rosdep install -y --from-paths src --ignore-src -r -y
 
 # RUN . /opt/ros/$ROS_DISTRO/setup.bash && colcon build
 

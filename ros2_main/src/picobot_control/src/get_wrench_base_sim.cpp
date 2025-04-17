@@ -208,6 +208,7 @@ void iiwa_jointstates_callback(sensor_msgs::JointState inflow_j_states){
     
     
 }
+
 int main(int argc, char **argv){
     ros::init(argc, argv, "get_wrench_base_sim");
     ros::NodeHandle nh;
