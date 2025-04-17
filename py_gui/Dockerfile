@@ -1,4 +1,6 @@
 FROM ros:humble
+# Likely better to go back to ROS1 and then use ros-bridge for compatibility
+# while developing the JS
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \

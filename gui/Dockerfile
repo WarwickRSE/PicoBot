@@ -1,5 +1,5 @@
 # Base ROS with GUI tools (for future RViz/etc.)
-FROM ros:jazzy-desktop
+FROM ros:humble
 
 # Set environment
 ENV DEBIAN_FRONTEND=noninteractive
